@@ -1,52 +1,34 @@
 package Algorithems;
 
-import java.util.ArrayList;
-
 public class BubbleSort {
-	public static void bubbleSort(ArrayList<Integer> list) {
-        int n = list.size();
-        boolean swapped;
-        
+	public static void bubbleSort(int[] arr) {
+        int n = arr.length;
         for (int i = 0; i < n - 1; i++) {
-            swapped = false;
             for (int j = 0; j < n - 1 - i; j++) {
-                if (list.get(j) > list.get(j + 1)) {
-                    // Swap list[j] and list[j + 1]
-                    int temp = list.get(j);
-                    list.set(j, list.get(j + 1));
-                    list.set(j + 1, temp);
-                    swapped = true;
+                if (arr[j] > arr[j + 1]) {
+                    // Swap arr[j] and arr[j + 1]
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
                 }
             }
-            if (!swapped) break;
         }
-    }
-
-    // Method to print the elements of the ArrayList
-    public static void printList(ArrayList<Integer> list) {
-        for (int num : list) {
-            System.out.print(num + " ");
-        }
-        System.out.println();
     }
 
     public static void main(String[] args) {
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(64);
-        list.add(34);
-        list.add(25);
-        list.add(12);
-        list.add(22);
-        list.add(11);
-        list.add(90);
+        int[] arr = {64, 34, 25, 12, 22, 11, 90};
+        System.out.println("Unsorted array:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
 
-        System.out.println("Unsorted list:");
-        printList(list);
+        bubbleSort(arr);
 
-        bubbleSort(list);
-
-        System.out.println("Sorted list:");
-        printList(list);
+        System.out.println("Sorted array:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
     }
 
 }
