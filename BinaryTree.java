@@ -26,7 +26,38 @@ public class BinaryTree {
         return root;
     }
 
-    // Inorder tree  
+    public static Node delete(Node root, int data) {
+        if (root == null) {
+            return null;
+        }
+        if (data < root.data) {
+            root.left = delete(root.left, data);
+        } else if (data > root.data) {
+            root.right = delete(root.right, data);
+        } else {
+            
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+           
+            root.data = minValue(root.right);
+            root.right = delete(root.right, root.data);
+        }
+        return root;
+    }
+
+    public static int minValue(Node root) {
+        int minv = root.data;
+        while (root.left != null) {
+            minv = root.left.data;
+            root = root.left;
+        }
+        return minv;
+    }
+
+    // Inorder tree traversal
     public static void inorderTraversal(Node root) {
         if (root == null)
             return;
@@ -35,7 +66,7 @@ public class BinaryTree {
         inorderTraversal(root.right);
     }
 
-    // Preorder tree  
+    // Preorder tree traversal
     public static void preorderTraversal(Node root) {
         if (root == null)
             return;
@@ -44,7 +75,7 @@ public class BinaryTree {
         preorderTraversal(root.right);
     }
 
-    // Postorder tree 
+    // Postorder tree traversal
     public static void postorderTraversal(Node root) {
         if (root == null)
             return;
@@ -75,5 +106,10 @@ public class BinaryTree {
 
         System.out.print("\nPostorder: ");
         postorderTraversal(root);
+
+        System.out.println("\n\nDeleting 13");
+        root = delete(root, 13);
+        System.out.print("Inorder after deletion: ");
+        inorderTraversal(root);
     }
 }
