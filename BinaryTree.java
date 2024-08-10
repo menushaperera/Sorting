@@ -1,63 +1,130 @@
 package Algorithms;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+// Node class to define the structure of the node
 class Node {
     int data;
     Node left;
     Node right;
-    
+
+    // Parameterized Constructor
     Node(int val) {
         data = val;
-        left = null; 
+        left = null;
         right = null;
     }
 }
 
 public class BinaryTree {
-
+    // Function to insert nodes
     public static Node insert(Node root, int data) {
+        // If tree is empty, new node becomes the root
         if (root == null) {
-            return new Node(data);
+            root = new Node(data);
+            return root;
         }
-        if (data < root.data) {
-            root.left = insert(root.left, data);
-        } else {
-            root.right = insert(root.right, data);
-        }
-        return root;
-    }
 
-    public static Node delete(Node root, int data) {
-        if (root == null) {
-            return null;
-        }
-        if (data < root.data) {
-            root.left = delete(root.left, data);
-        } else if (data > root.data) {
-            root.right = delete(root.right, data);
-        } else {
-            
-            if (root.left == null) {
-                return root.right;
-            } else if (root.right == null) {
-                return root.left;
+        // Queue to traverse the tree and find the position to insert the node
+        Queue<Node> q = new LinkedList<>();
+        q.offer(root);
+        while (!q.isEmpty()) {
+            Node temp = q.poll();
+
+            // Insert node as the left child of the parent node
+            if (temp.left == null) {
+                temp.left = new Node(data);
+                break;
+            } else {
+                q.offer(temp.left);
             }
-           
-            root.data = minValue(root.right);
-            root.right = delete(root.right, root.data);
+
+            // Insert node as the right child of the parent node
+            if (temp.right == null) {
+                temp.right = new Node(data);
+                break;
+            } else {
+                q.offer(temp.right);
+            }
         }
         return root;
     }
 
-    public static int minValue(Node root) {
-        int minv = root.data;
-        while (root.left != null) {
-            minv = root.left.data;
-            root = root.left;
+    // Function to delete the deepest node in the tree
+    public static void deleteDeepest(Node root, Node d_node) {
+        Queue<Node> q = new LinkedList<>();
+        q.offer(root);
+
+        Node temp = null;
+        while (!q.isEmpty()) {
+            temp = q.poll();
+
+            if (temp == d_node) {
+                temp = null;
+                return;
+            }
+
+            if (temp.right != null) {
+                if (temp.right == d_node) {
+                    temp.right = null;
+                    return;
+                } else {
+                    q.offer(temp.right);
+                }
+            }
+
+            if (temp.left != null) {
+                if (temp.left == d_node) {
+                    temp.left = null;
+                    return;
+                } else {
+                    q.offer(temp.left);
+                }
+            }
         }
-        return minv;
     }
 
-    // Inorder tree traversal
+    // Function to delete a node with the given key
+    public static Node deletion(Node root, int key) {
+        if (root == null)
+            return null;
+
+        if (root.left == null && root.right == null) {
+            if (root.data == key)
+                return null;
+            else
+                return root;
+        }
+
+        Queue<Node> q = new LinkedList<>();
+        q.offer(root);
+
+        Node temp = null;
+        Node keyNode = null;
+
+        while (!q.isEmpty()) {
+            temp = q.poll();
+
+            if (temp.data == key) {
+                keyNode = temp;
+            }
+
+            if (temp.left != null)
+                q.offer(temp.left);
+            if (temp.right != null)
+                q.offer(temp.right);
+        }
+
+        if (keyNode != null) {
+            int deepestNodeValue = temp.data;
+            keyNode.data = deepestNodeValue;
+            deleteDeepest(root, temp);
+        }
+        return root;
+    }
+
+    // Inorder tree traversal (Left - Root - Right)
     public static void inorderTraversal(Node root) {
         if (root == null)
             return;
@@ -66,7 +133,7 @@ public class BinaryTree {
         inorderTraversal(root.right);
     }
 
-    // Preorder tree traversal
+    // Preorder tree traversal (Root - Left - Right)
     public static void preorderTraversal(Node root) {
         if (root == null)
             return;
@@ -75,7 +142,7 @@ public class BinaryTree {
         preorderTraversal(root.right);
     }
 
-    // Postorder tree traversal
+    // Postorder tree traversal (Left - Right - Root)
     public static void postorderTraversal(Node root) {
         if (root == null)
             return;
@@ -84,9 +151,11 @@ public class BinaryTree {
         System.out.print(root.data + " ");
     }
 
+   
     public static void main(String[] args) {
         Node root = null;
-     
+
+        // Insertion of nodes
         root = insert(root, 9);
         root = insert(root, 13);
         root = insert(root, 4);
@@ -97,19 +166,19 @@ public class BinaryTree {
         root = insert(root, 14);
         root = insert(root, 2);
         root = insert(root, 5);
-
-        System.out.print("Preorder: ");
+        // Display traversals
+        System.out.print("Preorder traversal: ");
         preorderTraversal(root);
-
-        System.out.print("\nInorder: ");
+        System.out.print("\nInorder traversal: ");
         inorderTraversal(root);
-
-        System.out.print("\nPostorder: ");
+        System.out.print("\nPostorder traversal: ");
         postorderTraversal(root);
 
-        System.out.println("\n\nDeleting 13");
-        root = delete(root, 13);
-        System.out.print("Inorder after deletion: ");
+        // Delete a node with data = 11
+        root = deletion(root, 11);
+
+        // Display traversals after deletion
+        System.out.print("\nInorder traversal after deletion: ");
         inorderTraversal(root);
     }
 }
